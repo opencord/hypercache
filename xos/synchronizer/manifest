@@ -1,0 +1,17 @@
+manifest
+hpc_watcher.py
+steps/sync_hpcservices.py
+steps/sync_serviceprovider.py
+steps/sync_contentprovider.py
+steps/sync_cdnprefix.py
+steps/sync_originserver.py
+steps/garbage_collector.py
+steps/sync_sitemap.py
+hpc_synchronizer_config
+start.sh
+stop.sh
+hpc-synchronizer.py
+model-deps
+run.sh
+fsck.py
+hpclib.py
