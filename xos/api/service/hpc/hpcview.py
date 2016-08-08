@@ -14,15 +14,6 @@ import json
 import socket
 import time
 
-# This REST API endpoint contains a bunch of misc information that the
-# tenant view needs to display
-
-def get_service_slices(service):
-    try:
-        return service.slices.all()
-    except:
-        return service.service.all()
-
 def lookup_tag(service, instance, name, default=None):
     instance_type = ContentType.objects.get_for_model(instance)
     t = Tag.objects.filter(service=service, name=name, content_type__pk=instance_type.id, object_id=instance.id)
@@ -91,7 +82,7 @@ def get_public_ip(service, instance):
 
 def getHpcDict(user, pk):
     hpc = HpcService.objects.get(pk=pk)
-    slices = get_service_slices(hpc)
+    slices = hpc.slices.all()
 
     dnsdemux_slice = None
     dnsredir_slice = None
@@ -111,7 +102,7 @@ def getHpcDict(user, pk):
         rr = RequestRouterService.objects.all()
         if rr:
             rr=rr[0]
-            slices = get_service_slices(rr)
+            slices = rr.slices.all()
             for slice in slices:
                 if "dnsdemux" in slice.name:
                     dnsdemux_service = rr
