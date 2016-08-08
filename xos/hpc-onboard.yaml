@@ -13,11 +13,11 @@ topology_template:
           base_url: file:///opt/xos_services/hypercache/xos/
           models: models.py
           admin: admin.py
-          admin_template: templates/hpcadmin.html  templates/hpctools.html
+          admin_template: templates/hpcadmin.html, templates/hpctools.html
           synchronizer: synchronizer/manifest
           synchronizer_run: hpc-synchronizer.py
-          tosca_custom_types: tosca/resources/cdn.yaml
-          #tosca_resource: tosca/resources/vcpeservice.py
+          tosca_custom_types: tosca/custom_types/cdn.yaml
+          tosca_resource: tosca/resources/cdnprefix.py, tosca/resources/cdnservice.py, tosca/resources/contentprovider.py, tosca/resources/hpchealthcheck.py, tosca/resources/originserver.py, tosca/resources/serviceprovider.py
           #rest_service: subdirectory:vsg api/service/vsg/vsgservice.py
           #rest_tenant: subdirectory:cord api/tenant/cord/vsg.py
           #private_key: file:///opt/xos/key_import/vsg_rsa
