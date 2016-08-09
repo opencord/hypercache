@@ -10,6 +10,7 @@ from core.models import Slice, Instance, ServiceClass, Reservation, Tag, Network
 
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.views import APIView
 
 def ps_id_to_pl_id(x):
     # Since we don't want the XOS object IDs to conflict with existing
@@ -327,9 +328,12 @@ FUNCS = {"GetConfiguration": HandleGetConfiguration1,
          "GetNodes2": HandleGetNodes2,
          "GetSlices2": HandleGetSlices2}
 
-@csrf_exempt
-def LegacyXMLRPC(request):
-    if request.method == "POST":
+#@csrf_exempt
+class LegacyApi(APIView):
+    method_kind = "list"
+    method_name = "legacyapi"
+
+    def post(self, request, format=None):
         try:
             (args, method) = xmlrpclib.loads(request.body)
             result = None
@@ -339,8 +343,6 @@ def LegacyXMLRPC(request):
         except:
             traceback.print_exc()
             return HttpResponseServerError()
-    else:
-        return HttpResponse("Not Implemented")
 
 if __name__ == '__main__':
     slices = GetSlices(slice_remap = DEFAULT_REMAP)
