@@ -6,7 +6,7 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from core.models import *
 from services.hpc.models import *
-from services.requestrouter.models import *
+#from services.requestrouter.models import *
 from django.forms import widgets
 from django.core.exceptions import PermissionDenied
 from django.contrib.contenttypes.models import ContentType
@@ -98,18 +98,18 @@ def getHpcDict(user, pk):
             hpc_service = hpc
             hpc_slice = slice
 
-    if not dnsdemux_slice:
-        rr = RequestRouterService.objects.all()
-        if rr:
-            rr=rr[0]
-            slices = rr.slices.all()
-            for slice in slices:
-                if "dnsdemux" in slice.name:
-                    dnsdemux_service = rr
-                    dnsdemux_slice = slice
-                if "dnsredir" in slice.name:
-                    dnsredir_service = rr
-                    dnsredir_slice = slice
+#    if not dnsdemux_slice:
+#        rr = RequestRouterService.objects.all()
+#        if rr:
+#            rr=rr[0]
+#            slices = rr.slices.all()
+#            for slice in slices:
+#                if "dnsdemux" in slice.name:
+#                    dnsdemux_service = rr
+#                    dnsdemux_slice = slice
+#                if "dnsredir" in slice.name:
+#                    dnsredir_service = rr
+#                    dnsredir_slice = slice
 
     if not dnsredir_slice:
         print "no dnsredir slice"

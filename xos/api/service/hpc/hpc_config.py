@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseServerError
 from core.models import *
 from services.hpc.models import *
-from services.requestrouter.models import *
+#from services.requestrouter.models import *
 import xos.settings
 import json
 import os
@@ -66,25 +66,25 @@ def HpcConfig(request):
     if not hpcSlice:
         return HttpResponseServerError("Error: no HPC slice")
 
-    if (redirSlice==None) or (demuxSlice==None):
-        # The HPC Service didn't have a dnsredir or a dnsdemux, so try looking
-        # in the RequestRouterService for one.
-
-        rr = RequestRouterService.objects.all()
-        if not (rr):
-            return HttpResponseServerError("Error: no RR service")
-
-        rr = rr[0]
-        try:
-           slices = rr.slices.all()
-        except:
-           # this field used to be improperly named, and makemigrations won't fix it
-           slices = rr.service.all()
-        for slice in slices:
-            if "redir" in slice.name:
-                redirSlice = slice
-            elif "demux" in slice.name:
-                demuxSlice = slice
+#    if (redirSlice==None) or (demuxSlice==None):
+#        # The HPC Service didn't have a dnsredir or a dnsdemux, so try looking
+#        # in the RequestRouterService for one.
+#
+#        rr = RequestRouterService.objects.all()
+#        if not (rr):
+#            return HttpResponseServerError("Error: no RR service")
+#
+#        rr = rr[0]
+#        try:
+#           slices = rr.slices.all()
+#        except:
+#           # this field used to be improperly named, and makemigrations won't fix it
+#           slices = rr.service.all()
+#        for slice in slices:
+#            if "redir" in slice.name:
+#                redirSlice = slice
+#            elif "demux" in slice.name:
+#                demuxSlice = slice
 
     if not redirSlice:
         return HttpResponseServerError("Error: no dnsredir slice")

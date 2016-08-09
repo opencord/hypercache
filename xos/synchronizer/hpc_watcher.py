@@ -45,7 +45,7 @@ import django
 from django.contrib.contenttypes.models import ContentType
 from core.models import *
 from services.hpc.models import *
-from services.requestrouter.models import *
+#from services.requestrouter.models import *
 django.setup()
 import time
 import pycurl
@@ -458,9 +458,9 @@ class RRWatcher(BaseWatcher):
             for slice in self.get_service_slices(hpcService, "dnsdemux"):
                 self.check_request_routers(hpcService, slice.instances.all())
 
-        for rrService in RequestRouterService.objects.all():
-            for slice in self.get_service_slices(rrService, "dnsdemux"):
-                self.check_request_routers(rrService, slice.instances.all())
+#        for rrService in RequestRouterService.objects.all():
+#            for slice in self.get_service_slices(rrService, "dnsdemux"):
+#                self.check_request_routers(rrService, slice.instances.all())
 
     def run(self):
         while True:
