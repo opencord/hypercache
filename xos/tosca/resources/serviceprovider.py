@@ -1,13 +1,5 @@
-import os
-import pdb
-import sys
-import tempfile
-sys.path.append("/opt/tosca")
-from translator.toscalib.tosca_template import ToscaTemplate
-
-from services.hpc.models import ServiceProvider, HpcService
-
 from xosresource import XOSResource
+from services.hpc.models import ServiceProvider, HpcService
 
 class XOSServiceProvider(XOSResource):
     provides = "tosca.nodes.ServiceProvider"
