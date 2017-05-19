@@ -1,6 +1,6 @@
 from django.db import models
-from core.models import User, Service, SingletonModel, PlCoreBase
-from core.models.plcorebase import StrippedCharField
+from core.models import User, Service, SingletonModel, XOSBase
+from core.models.xosbase import StrippedCharField
 import os
 from django.db import models
 from django.forms.models import model_to_dict
@@ -42,7 +42,7 @@ class HpcService(Service):
             exclude_slices = [x for x in self.slices.all() if "cmi" in x.name]
             self.adjust_scale(slice_hint="hpc", scale=scale, exclusive_slices = exclude_slices, max_per_node=1)
 
-class ServiceProvider(PlCoreBase):
+class ServiceProvider(XOSBase):
     class Meta:
         app_label = "hpc"
 
@@ -60,7 +60,7 @@ class ServiceProvider(PlCoreBase):
         # filtering of visible objects by user.
         return qs.filter(hpcService=hpcService)
 
-class ContentProvider(PlCoreBase):
+class ContentProvider(XOSBase):
     class Meta:
         app_label = "hpc"
 
@@ -98,7 +98,7 @@ class ContentProvider(PlCoreBase):
 
         return False
 
-class OriginServer(PlCoreBase):
+class OriginServer(XOSBase):
     class Meta:
         app_label = "hpc"
 
@@ -130,7 +130,7 @@ class OriginServer(PlCoreBase):
 
         return False
 
-class CDNPrefix(PlCoreBase):
+class CDNPrefix(XOSBase):
     class Meta:
         app_label = "hpc"
 
@@ -159,7 +159,7 @@ class CDNPrefix(PlCoreBase):
 
         return False
 
-class AccessMap(PlCoreBase):
+class AccessMap(XOSBase):
     class Meta:
         app_label = "hpc"
 
@@ -170,7 +170,7 @@ class AccessMap(PlCoreBase):
 
     def __unicode__(self):  return self.name
 
-class SiteMap(PlCoreBase):
+class SiteMap(XOSBase):
     class Meta:
         app_label = "hpc"
 
@@ -205,7 +205,7 @@ class SiteMap(PlCoreBase):
                                   Q(contentProvider__serviceProvider__hpcService=hpcService) |
                                   Q(cdnPrefix__contentProvider__serviceProvider__hpcService=hpcService))
 
-class HpcHealthCheck(PlCoreBase):
+class HpcHealthCheck(XOSBase):
     class Meta:
         app_label = "hpc"
 
