@@ -1,0 +1,2 @@
+#! /bin/bash
+ssh -i {{ cmi_private_key }} -o "ProxyCommand ssh -q -i {{ cmi_compute_node_key }} -o StrictHostKeyChecking=no root@{{ cmi_compute_node }} nc {{ cmi_mgmt_ip }} 22" {{ cmi_root_user }}@cmi

@@ -1,0 +1,16 @@
+---
+
+- name: Copy over commonly used and utility TOSCA files
+  copy:
+    src: "{{ item }}"
+    dest: "/opt/cord_profile/{{ item }}"
+  with_items:
+    - setup_headnode.yml
+    - cdn_service.yml
+
+- name: Copy over the public key
+  copy:
+    src: "{{ item }}"
+    dest: "/opt/cord_profile/key_import/{{ item }}"
+  with_items:
+    - cdnnode_id_rsa.pub

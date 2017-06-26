@@ -1,0 +1,28 @@
+---
+
+- name: Include vars
+  hosts: all
+  tasks:
+    - name: Include variables
+      include_vars: "{{ item }}"
+      with_items:
+        - "/opt/cord/build/platform-install/profile_manifests/{{ cord_profile }}.yml"
+        - /opt/cord/build/platform-install/profile_manifests/local_vars.yml
+
+- name: Create config and inventory for talking to cmi
+  hosts: all
+  roles:
+    - generate-inventory
+
+- name: Create CORD profile
+  hosts: config
+  roles:
+    - cdn-cord-profile
+
+- include: /opt/cord/build/platform-install/add-onboard-containers-playbook.yml
+
+- name: Check to see if XOS UI is ready, apply profile config
+  hosts: xos_ui
+  connection: docker
+  roles:
+    - cdn-xos-config

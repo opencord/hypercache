@@ -1,0 +1,21 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+description: Some basic fixtures
+
+imports:
+   - custom_types/xos.yaml
+
+topology_template:
+  node_templates:
+    m1.cdnnode:
+      type: tosca.nodes.Flavor
+
+    image#AMC:
+      type: tosca.nodes.Image
+      properties:
+        path: /opt/xos/images/AMC.qcow2
+
+    image#CentOS-6-cdnnode-0.4:
+      type: tosca.nodes.Image
+      properties:
+        path: /opt/xos/images/CentOS-6-cdnnode-0.4.qcow2

@@ -1,0 +1,8 @@
+- name: create config file
+  local_action: template src=cmi.conf.j2 dest={{ playbook_dir }}/cmi.conf
+
+- name: create inventory file
+  local_action: template src=cmi-inventory.j2 dest={{ playbook_dir }}/cmi-inventory
+
+- name: create ssh-cmi.sh file
+  local_action: template src=ssh-cmi.sh.j2 dest={{ playbook_dir }}/ssh-cmi.sh mode=0777

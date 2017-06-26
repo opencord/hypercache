@@ -1,0 +1,62 @@
+---
+- hosts: localhost
+  vars:
+      amc_hostname: "localhost:3456"
+      amc_username: "co@opencloud.us"
+      amc_password: "XOScdn123$"
+      amc_plc_name: "CoBlitz Test"
+  tasks:
+      - name: Create service provider
+        act_sp:
+            name: cord
+            account: cord
+            enabled: true
+            username: "{{ amc_username }}"
+            password: "{{ amc_password }}"
+            hostname: "{{ amc_hostname }}"
+            plc_name: "{{ amc_plc_name }}"
+            state: present
+
+      - name: Create content provider
+        act_cp:
+            name: cord
+            account: cord
+            enabled: true
+            service_provider: cord
+            username: "{{ amc_username }}"
+            password: "{{ amc_password }}"
+            hostname: "{{ amc_hostname }}"
+            plc_name: "{{ amc_plc_name }}"
+            state: present
+
+      - name: Create origin server
+        act_origin:
+            url: "{{ item }}"
+            content_provider: cord
+            username: "{{ amc_username }}"
+            password: "{{ amc_password }}"
+            hostname: "{{ amc_hostname }}"
+            plc_name: "{{ amc_plc_name }}"
+            state: present
+        with_items:
+            - http://www.cs.arizona.edu
+            - http://onlab.vicci.org
+
+      - name: Create CDN Prefix
+        act_cdnprefix:
+            cdn_prefix: "{{ item.cdn_prefix }}"
+            default_origin_server: "{{ item.default_origin_server }}"
+            content_provider: cord
+            enabled: True
+            username: "{{ amc_username }}"
+            password: "{{ amc_password }}"
+            hostname: "{{ amc_hostname }}"
+            plc_name: "{{ amc_plc_name }}"
+            state: present
+        with_items:
+            - cdn_prefix: test.vicci.org
+              default_origin_server: http://www.cs.arizona.edu
+            - cdn_prefix: onlab.vicci.org
+              default_origin_server: http://onlab.vicci.org
+
+

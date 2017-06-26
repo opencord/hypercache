@@ -1,0 +1,25 @@
+---
+#- name: fix the networking
+#  shell: "{{ item }}"
+#  with_items:
+#    - ifconfig {{ eth_device }} hw ether {{ eth_mac }}
+#    - ip route del default || true
+#    - ip route add default via {{ gateway_ip }}
+#    - arp -s {{ gateway_ip }} {{ gateway_mac }}
+
+
+- name: download socat
+  get_url: url=http://ftp.tu-chemnitz.de/pub/linux/dag/redhat/el6/en/x86_64/rpmforge/RPMS/socat-1.7.1.3-1.el6.rf.x86_64.rpm dest=/root/socat-1.7.1.3-1.el6.rf.x86_64.rpm
+ 
+- name: install socat
+  yum: name=/root/socat-1.7.1.3-1.el6.rf.x86_64.rpm state=present
+
+- name: copy over setup answers
+  template: 
+      src: templates/setup_answers.txt.j2
+      dest: /root/setup_answers.txt
+
+- name: run the setup script
+  shell: /a/sbin/setup.sh < /root/setup_answers.txt
+  args:
+      creates: /a/var/log/setup.log

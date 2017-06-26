@@ -1,0 +1,57 @@
+---
+- hosts: localhost
+  vars:
+      amc_hostname: "localhost:3456"
+      amc_username: "co@opencloud.us"
+      amc_password: "XOScdn123$"
+      amc_plc_name: "CoBlitz Test"
+      amc_remote_hostname: "10.6.1.197"
+      cachenode_hostname: "hpc1.lab.local"
+  tasks:
+      - name: Create site
+        act_site:
+            name: examplesite
+            username: "{{ amc_username }}"
+            password: "{{ amc_password }}"
+            hostname: "{{ amc_hostname }}"
+            plc_name: "{{ amc_plc_name }}"
+            state: present
+
+      - name: Get license
+        set_fact: license="{{ lookup('file', 'license.txt') }}"
+
+      - name: Create node
+        act_cachenode:
+            name: "{{ cachenode_hostname }}"
+            site: examplesite
+            dns:
+                - "8.8.8.8"
+                - "8.8.4.4"
+            interfaces:
+                - mac_addr: "DE:AD:BE:EF:01:01"
+                  management: True
+                  if_name: eth0
+                  IpAddresses:
+                      - netmask: "16"
+                        address: "192.168.1.2"
+                        logical: 
+                            - Client-Serving         
+                  Routes:
+                      - subnet: 0.0.0.0/0
+                        metric: 0
+                        nexthop: 192.168.1.1
+            license: "{{ license }}"
+            username: "{{ amc_username }}"
+            password: "{{ amc_password }}"
+            hostname: "{{ amc_hostname }}"
+            plc_name: "{{ amc_plc_name }}"
+            remote_hostname: "{{ amc_remote_hostname }}"
+            state: present
+            force: true
+        register: cachenode
+
+      - name: Save bootscript
+        copy:
+             content: "{{ cachenode.setupscript }}"
+             dest: "/tmp/{{ cachenode_hostname }}"
+        when: cachenode.changed

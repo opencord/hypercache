@@ -1,0 +1,15 @@
+---
+
+- name: Include vars
+  hosts: all
+  tasks:
+    - name: Include variables
+      include_vars: "{{ item }}"
+      with_items:
+        - "/opt/cord/build/platform-install/profile_manifests/{{ cord_profile }}.yml"
+        - /opt/cord/build/platform-install/profile_manifests/local_vars.yml
+
+- name: Create config and inventory for talking to cmi
+  hosts: all
+  roles:
+    - generate-inventory

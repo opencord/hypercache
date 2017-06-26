@@ -1,0 +1,111 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+description: Setup the CDN on the pod
+
+imports:
+   - custom_types/xos.yaml
+
+topology_template:
+  node_templates:
+
+    Private:
+      type: tosca.nodes.NetworkTemplate
+
+    management:
+      type: tosca.nodes.network.Network.XOS
+      properties:
+          no-create: true
+          no-delete: true
+          no-update: true
+
+#    cdn-public:
+#      type: tosca.nodes.network.Network
+#      properties:
+#          ip_version: 4
+#          cidr: 207.141.192.128/28
+#      requirements:
+#          - network_template:
+#              node: Private
+#              relationship: tosca.relationships.UsesNetworkTemplate
+#          - owner:
+#              node: mysite_cdn
+#              relationship: tosca.relationships.MemberOfSlice
+#          - connection:
+#              node: mysite_cdn
+#              relationship: tosca.relationships.ConnectsToSlice
+
+    mysite:
+      type: tosca.nodes.Site
+
+    public:
+      type: tosca.nodes.network.Network.XOS
+      properties:
+        no-create: true
+        no-delete: true
+        no-update: true
+
+    service#cdn:
+      type: tosca.nodes.Service
+      properties:
+        public_key: { get_artifact: [ SELF, pubkey, LOCAL_FILE] }
+        private_key_fn: /opt/xos/services/cdn/keys/amc_id_rsa
+      artifacts:
+        pubkey: /opt/cord_profile/key_import/cdnnode_id_rsa.pub
+
+    mysite_cdn_control:
+      description: This slice holds the controller for the CDN
+      type: tosca.nodes.Slice
+      properties:
+          network: noauto
+      requirements:
+          - site:
+              node: mysite
+              relationship: tosca.relationships.MemberOfSite
+          - management:
+              node: management
+              relationship: tosca.relationships.ConnectsToNetwork
+          - public:
+              node: public
+              relationship: tosca.relationships.ConnectsToNetwork
+          - cdn_service:
+              node: service#cdn
+              relationship: tosca.relationships.MemberOfService
+
+
+    mysite_cdn_nodes:
+      description: This slice holds the hypercache/rr nodes for the CDN
+      type: tosca.nodes.Slice
+      properties:
+          network: noauto
+      requirements:
+          - site:
+              node: mysite
+              relationship: tosca.relationships.MemberOfSite
+          - management:
+              node: management
+              relationship: tosca.relationships.ConnectsToNetwork
+          - public:
+              node: public
+              relationship: tosca.relationships.ConnectsToNetwork
+          - cdn_service:
+              node: service#cdn
+              relationship: tosca.relationships.MemberOfService
+
+    mysite_cdn_cli:
+      description: This slice holds the hypercache/rr nodes for the CDN
+      type: tosca.nodes.Slice
+      properties:
+          network: noauto
+      requirements:
+          - site:
+              node: mysite
+              relationship: tosca.relationships.MemberOfSite
+          - management:
+              node: management
+              relationship: tosca.relationships.ConnectsToNetwork
+          - public:
+              node: public
+              relationship: tosca.relationships.ConnectsToNetwork
+          - cdn_service:
+              node: service#cdn
+              relationship: tosca.relationships.MemberOfService

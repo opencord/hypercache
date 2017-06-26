@@ -1,0 +1,53 @@
+---
+- hosts: localhost
+  vars:
+      amc_hostname: "localhost:3456"
+      amc_username: "co@opencloud.us"
+      amc_password: "XOScdn123$"
+      amc_plc_name: "CoBlitz Test"
+      amc_remote_hostname: "10.6.1.197"
+      rrnode_hostname: "rr1.lab.local"
+  tasks:
+      - name: Create site
+        act_site:
+            name: examplesite
+            username: "{{ amc_username }}"
+            password: "{{ amc_password }}"
+            hostname: "{{ amc_hostname }}"
+            plc_name: "{{ amc_plc_name }}"
+            state: present
+
+      - name: Create rr node
+        act_rr:
+            name: "{{ rrnode_hostname }}"
+            site: examplesite
+            dns:
+                - "8.8.8.8"
+                - "8.8.4.4"
+            interfaces:
+                - mac_addr: "DE:AD:BE:EF:01:01"
+                  management: True
+                  if_name: eth0
+                  IpAddresses:
+                      - netmask: "16"
+                        address: "192.168.1.200"
+                        logical: 
+                            - Client-Serving         
+                  Routes:
+                      - subnet: 0.0.0.0/0
+                        metric: 0
+                        nexthop: 192.168.1.1
+            username: "{{ amc_username }}"
+            password: "{{ amc_password }}"
+            hostname: "{{ amc_hostname }}"
+            plc_name: "{{ amc_plc_name }}"
+            remote_hostname: "{{ amc_remote_hostname }}"
+            state: present
+            force: true
+        register: rrnode
+
+      - name: Save bootscript
+        copy:
+             content: "{{ rrnode.setupscript }}"
+             dest: "/tmp/{{ rrnode_hostname }}"
+        when: rrnode.changed

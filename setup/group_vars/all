@@ -1,0 +1,19 @@
+---
+cmi_compute_node: 10.1.0.16
+cmi_compute_node_key: /opt/cord_profile/node_key
+cmi_mgmt_ip: 172.27.0.7
+cmi_root_user: root
+cmi_private_key: private/amc_id_rsa
+
+eth_device: eth0
+eth_mac: 02:42:CF:8D:C0:82
+cmi_password: XOScdn123$
+cmi_domain: xos-cloudlab-cmi-vtn
+cmi_hostname: xos-cloudlab-cmi-vtn.opencloud.us
+cmi_dns: 8.8.8.8
+cdn_site: CoBlitz Test
+cdn_short_name: cobtest
+cdn_name: CoBlitz
+gateway_ip: 207.141.192.129
+gateway_mac: a4:23:05:45:56:79
+node_hostname: xos-cloudlab-node1-vtn.opencloud.us
